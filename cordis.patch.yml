@@ -1,0 +1,19 @@
+# Register this plugin into a DSH profile.
+#
+# A profile-level install — `dsh plugin --profile <name> add <package>` — applies
+# this patch as a bundle layer, which is what inserts the plugin's row into the
+# Loader tree. `name` must be the real package name because the Loader resolves
+# it as a module from the profile directory; `scripts/build.mjs` fails the build
+# if it ever drifts from package.json.
+#
+# The browser half ships through package.json's `dsh.client` declaration and is
+# scanned into window.__DSH_BOOT__; this row gives the cordis Loader the
+# host-side entry it needs (the package's root module exports a no-op `apply`,
+# which is the whole host contribution).
+#
+# Never ALSO add the same row by hand to ~/.dsh/profiles/<profile>/cordis.patch.yml:
+# the bundle layer and the user layer would insert the same loader row twice.
+
+- insert:
+    - id: dsh-session-diff
+      name: '@xiaoyu/dsh-session-diff'

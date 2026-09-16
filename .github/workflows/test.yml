@@ -1,0 +1,23 @@
+name: test
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - run: npm install
+      - run: npm run build
+      # lib/ is committed because consumers never build (no `prepare`: npm and
+      # pnpm 10+ block dependency lifecycle scripts). If a source change lands
+      # without a rebuild, the published bundle would be stale — fail instead.
+      - name: committed bundle must match the sources
+        run: git diff --exit-code -- lib/client.js
+      - run: npm test
