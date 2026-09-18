@@ -30,12 +30,18 @@ dsh plugin --profile web add github:2002XiaoYu/dsh-session-diff   # 也可以 fi
 # 强制刷新浏览器（Cmd+Shift+R）
 ```
 
-目前还没有发布到 npm，所以从仓库安装：`lib/` 与 `src/` 一起提交在仓库里，源码安装**不需要构建**。等 `@xiaoyu/dsh-session-diff` 发到 npm 之后，同一条命令把参数换成包名即可。
+目前还没有发布到 npm，所以从仓库安装：`lib/` 与 `src/` 一起提交在仓库里，源码安装**不需要构建**。同一份预构建产物也挂在 Release 上，不想克隆仓库就直接装：
+
+```bash
+dsh plugin --profile web add https://github.com/2002XiaoYu/dsh-session-diff/releases/download/v0.1.0/dsh-session-diff-0.1.0.tgz
+```
+
+等包发到 npm 之后，同一条命令把参数换成 `dsh-session-diff` 即可。
 
 `dsh plugin` 会把包装进 profile；因为包声明了 `dsh.bundle.patch`，它同时会被注册进 `dsh.profile.bundles`，作为一个 profile layer。卸载同样是一条命令，不用手工改配置：
 
 ```bash
-dsh plugin --profile web remove @xiaoyu/dsh-session-diff
+dsh plugin --profile web remove dsh-session-diff
 ```
 
 安装插件没有 GUI 入口——Settings → Plugins 页面只能查看和移除已安装的插件，不能新增。
@@ -99,10 +105,10 @@ npm test          # diff 引擎、tokenizer、地址、bundle 加载、注册、
 
 ```bash
 npm login
-npm publish --access public        # 带作用域的名字首次发布必须加这个参数
+npm publish                        # 不带作用域的名字，不需要 --access 参数
 ```
 
-作用域必须是发布者自己掌控的 npm 用户名或组织（这里是 `@xiaoyu`）；否则 `npm publish` 会以 403 失败。GitHub owner 与 npm 作用域不必一致——本仓库在 `2002XiaoYu/dsh-session-diff`。改名是安全的：`scripts/build.mjs` 从 `package.json` 读名字，把它注入为 bundle 的 loader id，并在 `cordis.patch.yml` 仍注册旧名字时让构建失败。
+包名不带作用域（`dsh-session-diff`），所以不需要先拥有任何 npm 组织或作用域。带作用域的名字必须归发布者所有，否则 `npm publish` 会以 403 失败；GitHub owner 与 npm 账号也不必一致——本仓库在 `2002XiaoYu/dsh-session-diff`。改名是安全的：`scripts/build.mjs` 从 `package.json` 读名字，把它注入为 bundle 的 loader id，并在 `cordis.patch.yml` 仍注册旧名字时让构建失败。
 
 `prepack` 会从 `src/` 重新构建 `lib/client.js`，所以发布产物不可能与源码脱节。刻意没有 `prepare`：npm 和 pnpm 10+ 会拦截被安装依赖的生命周期脚本，装的时候构建会被静默跳过。因此使用者永远不会在本地跑构建——这也意味着**基于 git 的安装需要 `lib/` 已提交**，因为那里不会重新构建。registry 路径和 `dsh plugin add <file.tgz>` 都是自包含的。
 

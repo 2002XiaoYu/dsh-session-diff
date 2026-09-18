@@ -1,7 +1,7 @@
 {
-  "name": "@xiaoyu/dsh-session-diff",
+  "name": "dsh-session-diff",
   "version": "0.1.0",
-  "description": "Session-scoped git-style diff decoration for the DSH Web right sidebar: opening a file changed by the current conversation marks added and removed lines, and a companion page lists every file this conversation touched.",
+  "description": "Session-scoped diff view for the DSH Web right sidebar: open a file the current conversation changed and it renders in place with git-style added/removed line backgrounds, +/− markers and dual old/new line numbers under syntax colouring, a Changes only / Whole file toggle, a Re-read button, and a companion tab listing every file the session changed.",
   "type": "module",
   "main": "lib/index.js",
   "exports": {

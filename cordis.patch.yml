@@ -16,4 +16,4 @@
 
 - insert:
     - id: dsh-session-diff
-      name: '@xiaoyu/dsh-session-diff'
+      name: 'dsh-session-diff'

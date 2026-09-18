@@ -41,15 +41,22 @@ dsh plugin --profile web add github:2002XiaoYu/dsh-session-diff   # or file:/pat
 ```
 
 There is no npm release yet, so install from the repository: `lib/` is committed next to `src/`,
-which means a source install runs no build step. Once `@xiaoyu/dsh-session-diff` is on npm, the
-package name works in the same command.
+which means a source install runs no build step. The same prebuilt artifact is attached to the
+release, if you would rather not clone:
+
+```bash
+dsh plugin --profile web add https://github.com/2002XiaoYu/dsh-session-diff/releases/download/v0.1.0/dsh-session-diff-0.1.0.tgz
+```
+
+Once the package is published to npm, `dsh plugin --profile web add dsh-session-diff` works in the
+same place.
 
 `dsh plugin` adds the package to the profile and, because the package declares
 `dsh.bundle.patch`, registers it in `dsh.profile.bundles` as a profile layer. Uninstall is the
 same one command, with no configuration editing:
 
 ```bash
-dsh plugin --profile web remove @xiaoyu/dsh-session-diff
+dsh plugin --profile web remove dsh-session-diff
 ```
 
 There is no GUI entry point for installing plugins — the Settings → Plugins page lists and
@@ -143,14 +150,15 @@ Publishing:
 
 ```bash
 npm login
-npm publish --access public        # required the first time for a scoped name
+npm publish                        # unscoped name — no --access flag needed
 ```
 
-The scope must be an npm username or organisation the publisher controls (`@xiaoyu` here);
-`npm publish` fails with a 403 otherwise. The GitHub owner and the npm scope do not have to
-match — this repository lives at `2002XiaoYu/dsh-session-diff`. Renaming is safe:
-`scripts/build.mjs` reads the name from `package.json`, injects it as the bundle's loader id, and
-fails the build if `cordis.patch.yml` still registers the old name.
+The package name is unscoped (`dsh-session-diff`), so no npm scope or organisation has to be owned
+first. A scoped name would have to resolve to a scope the publisher controls, and `npm publish`
+fails with a 403 otherwise; the GitHub owner and the npm account do not have to match either —
+this repository lives at `2002XiaoYu/dsh-session-diff`. Renaming is safe: `scripts/build.mjs`
+reads the name from `package.json`, injects it as the bundle's loader id, and fails the build if
+`cordis.patch.yml` still registers the old name.
 
 `prepack` rebuilds `lib/client.js` from `src/` so the published artifact can never drift from the
 sources. There is deliberately no `prepare`: npm and pnpm 10+ block lifecycle scripts for
