@@ -2,9 +2,13 @@
 
 Session-scoped diff decorations for the DSH Web right sidebar.
 
+[English](README.md) | [简体中文](README.zh.md)
+
 When you open a file that the **current conversation** changed, the sidebar renders it with
 git-style added/removed line highlighting plus syntax colouring, and a companion page lists
 every file this conversation touched.
+
+![The decorated file view: session-scoped diff in the right sidebar](assets/screenshot-1.png)
 
 ## What it does
 
@@ -31,10 +35,14 @@ exactly as before.
 ### For users (recommended — one command)
 
 ```bash
-dsh plugin --profile web add @xiaoyu/dsh-session-diff   # or file:/path/to.tgz, or github:2002XiaoYu/dsh-session-diff
+dsh plugin --profile web add github:2002XiaoYu/dsh-session-diff   # or file:/path/to.tgz
 # restart `dsh web`   (dsh.profile.bundles is read once at boot)
 # hard-refresh the browser (Cmd+Shift+R)
 ```
+
+There is no npm release yet, so install from the repository: `lib/` is committed next to `src/`,
+which means a source install runs no build step. Once `@xiaoyu/dsh-session-diff` is on npm, the
+package name works in the same command.
 
 `dsh plugin` adds the package to the profile and, because the package declares
 `dsh.bundle.patch`, registers it in `dsh.profile.bundles` as a profile layer. Uninstall is the
